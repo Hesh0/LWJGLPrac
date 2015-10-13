@@ -43,8 +43,6 @@ public class Display // implements Runnable
 			glfwTerminate();
 			errorCallback.release();
 		}
-		
-		
 	}
 	
 	public void init()
