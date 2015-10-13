@@ -14,8 +14,6 @@ import org.lwjgl.opengl.GL;
 
 import me.mesh.sim.exceptions.WindowSetUpException;
 
-
-
 public class Display // implements Runnable
 {
 	private static final int WIDTH = 640;
@@ -52,7 +50,7 @@ public class Display // implements Runnable
 	public void init()
 	{
 		// Error callback- will print to standard error any GLFW errors that occur.
-		// GLFWErrorCallback.createPrint(System.err) doesn't work for some reason.
+		// GLFWErrorCallback.createPrint(System.err)- only works for nightly build.
 		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 		
 		// Try to initialize the GLFW library, if that fails no point continuing the program.
@@ -104,5 +102,4 @@ public class Display // implements Runnable
 	{
 		new Display().run();
 	}
-
 }
