@@ -13,19 +13,29 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
 import me.mesh.sim.exceptions.WindowSetUpException;
+import me.mesh.sim.util.ShaderUtil;
+import me.mesh.sim.util.render.ModelLoader;
+import me.mesh.sim.gfx.render.Renderer;
 
-
-
-public class Display // implements Runnable
+public class Main // implements Runnable
 {
 	private static final int WIDTH = 640;
 	private static final int HEIGHT = WIDTH / 4 * 3;
 
-	
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
+	// private RawModel model;
+	// private ModelLoader modelLoader = new ModelLoader();
+	
+	private float[] vertices = {
+			+0.0f, +0.5f, 0.0f,
+			-0.5f, -0.5f, 0.0f,
+			+0.5f, -0.5f, 0.0f
+	};
 	
 	private long window;
+	
+	private ShaderUtil shaderUtil;
 	
 	public void run()
 	{
@@ -36,23 +46,22 @@ public class Display // implements Runnable
 			init();
 			loop();
 			
-			// loop ended so destroy window
+			// loop ended so destroy window.
 			glfwDestroyWindow(window);
 			keyCallback.release();
 		}
 		finally
 		{
+			// does the cleanup, frees allocated memory etc.
 			glfwTerminate();
 			errorCallback.release();
 		}
-		
-		
 	}
 	
 	public void init()
 	{
 		// Error callback- will print to standard error any GLFW errors that occur.
-		// GLFWErrorCallback.createPrint(System.err) doesn't work for some reason.
+		// GLFWErrorCallback.createPrint(System.err) - only nightly build.
 		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 		
 		// Try to initialize the GLFW library, if that fails no point continuing the program.
@@ -60,6 +69,11 @@ public class Display // implements Runnable
 			throw new IllegalStateException("Unable to initialise GLFW");
 		
 		// Window will stay hidden after creation.
+		glfwWindowHint(GLFW_SAMPLES, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); 
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 		
@@ -90,19 +104,37 @@ public class Display // implements Runnable
 	private void loop()
 	{
 		GL.createCapabilities();
-		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+		initShaders();
+		// set the background color...to black.
+		// glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		ModelLoader loader = new ModelLoader();
+		RawModel model = loader.loadtoVAO(vertices);		
+		Renderer renderer = new Renderer();
 		
 		while (glfwWindowShouldClose(window) == GL_FALSE)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			shaderUtil.bind();
+			renderer.render(model);
+			ShaderUtil.unbind();
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 		}
+		shaderUtil.dispose();
+		loader.cleanUp();
+	}
+	
+	private void initShaders()
+	{
+		shaderUtil = new ShaderUtil();
+		shaderUtil.attachVertexShader("me/mesh/sim/gfx/triangle.vs");
+		shaderUtil.attachFragmentShader("me/mesh/sim/gfx/triangle.fs");
+		shaderUtil.link();
 	}
 	
 	public static void main(String[] args)
 	{
-		new Display().run();
+		new Main().run();
 	}
 
 }
