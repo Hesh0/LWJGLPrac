@@ -17,7 +17,11 @@ import me.mesh.sim.util.ShaderUtil;
 import me.mesh.sim.util.render.ModelLoader;
 import me.mesh.sim.gfx.render.Renderer;
 
+<<<<<<< HEAD:src/me/mesh/sim/gfx/Main.java
 public class Main // implements Runnable
+=======
+public class Display // implements Runnable
+>>>>>>> fd210444c2a3015d1456b1ffaad933bee87e9a1b:src/me/mesh/sim/gfx/Display.java
 {
 	private static final int WIDTH = 640;
 	private static final int HEIGHT = WIDTH / 4 * 3;
@@ -61,7 +65,11 @@ public class Main // implements Runnable
 	public void init()
 	{
 		// Error callback- will print to standard error any GLFW errors that occur.
+<<<<<<< HEAD:src/me/mesh/sim/gfx/Main.java
 		// GLFWErrorCallback.createPrint(System.err) - only nightly build.
+=======
+		// GLFWErrorCallback.createPrint(System.err)- only works for nightly build.
+>>>>>>> fd210444c2a3015d1456b1ffaad933bee87e9a1b:src/me/mesh/sim/gfx/Display.java
 		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 		
 		// Try to initialize the GLFW library, if that fails no point continuing the program.
@@ -136,5 +144,4 @@ public class Main // implements Runnable
 	{
 		new Main().run();
 	}
-
 }
