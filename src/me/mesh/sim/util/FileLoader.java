@@ -8,7 +8,6 @@ public class FileLoader
 {
 	public static String readFromFile(String fileName)
 	{
-		System.out.println("readFromFile()");
 
 		StringBuilder source = new StringBuilder();
 		try(
@@ -20,12 +19,10 @@ public class FileLoader
 			{
 				source.append(line).append('\n');
 			}
-			System.out.println("Dint fail");
 
 		}
-		catch(Exception ex)
+		catch(IOException ex)
 		{
-			System.out.println(ex.getSuppressed());
 			System.err.format("Error loading %s ", fileName);
 			ex.printStackTrace();
 		}

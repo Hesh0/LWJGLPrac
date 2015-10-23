@@ -2,11 +2,9 @@ package me.mesh.sim.gfx;
 
 public class RawModel
 {
-	
 	private int vaoID;
 	private int vboID;
 	private int numVertices;
-	
 	
 	public RawModel(int vaoID, int numVertices)
 	{
@@ -29,31 +27,4 @@ public class RawModel
 	{
 		return numVertices;
 	}
-	
-	
-
-
-
-
-
-
-	
-
-
-
-
-
-	
-
-
-
-
-
-
-	float[] vertices = new float[]
-	{
-		+0.0f, +0.5f,
-		+0.5f, -0.5f,
-		-0.5f, -0.5f
-	};
 }

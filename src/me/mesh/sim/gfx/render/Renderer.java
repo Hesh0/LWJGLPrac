@@ -1,11 +1,10 @@
 package me.mesh.sim.gfx.render;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
-import me.mesh.sim.gfx.RawModel;;
+import me.mesh.sim.gfx.RawModel;
 
 public class Renderer
 {
@@ -18,7 +17,7 @@ public class Renderer
 	{
 		glBindVertexArray(model.getVaoID());
 		glEnableVertexAttribArray(0);
-		glDrawArrays(GL_TRIANGLES, 0, model.getVertexCount());
+		glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 	}

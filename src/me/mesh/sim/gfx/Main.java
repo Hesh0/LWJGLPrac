@@ -2,49 +2,45 @@ package me.mesh.sim.gfx;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL.*;
 import static org.lwjgl.system.MemoryUtil.*; // For NULL
-
-import java.nio.ByteBuffer;
 
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
 
 import me.mesh.sim.exceptions.WindowSetUpException;
 import me.mesh.sim.util.ShaderUtil;
 import me.mesh.sim.util.render.ModelLoader;
 import me.mesh.sim.gfx.render.Renderer;
 
-<<<<<<< HEAD:src/me/mesh/sim/gfx/Main.java
-public class Main // implements Runnable
-=======
-public class Display // implements Runnable
->>>>>>> fd210444c2a3015d1456b1ffaad933bee87e9a1b:src/me/mesh/sim/gfx/Display.java
+public class Main
 {
 	private static final int WIDTH = 640;
 	private static final int HEIGHT = WIDTH / 4 * 3;
 
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
-	// private RawModel model;
-	// private ModelLoader modelLoader = new ModelLoader();
-	
-	private float[] vertices = {
-			+0.0f, +0.5f, 0.0f,
-			-0.5f, -0.5f, 0.0f,
-			+0.5f, -0.5f, 0.0f
-	};
-	
-	private long window;
 	
 	private ShaderUtil shaderUtil;
+	private long window;
 	
+	// coordinates for a Rectangle.
+	private float[] vertices = {
+		-0.5f, +0.5f, 0.0f,
+		-0.5f, -0.5f, 0.0f,			
+		+0.5f, -0.5f, 0.0f,
+		+0.5f, +0.5f, 0.0f,
+	};
+	
+	private int[] indices = {
+			0, 1, 3, 
+			3, 1, 2
+	};
+
 	public void run()
 	{
-		System.out.println("Starting the shit with LWJGL " + Sys.getVersion());
-		
 		try
 		{
 			init();
@@ -65,27 +61,20 @@ public class Display // implements Runnable
 	public void init()
 	{
 		// Error callback- will print to standard error any GLFW errors that occur.
-<<<<<<< HEAD:src/me/mesh/sim/gfx/Main.java
-		// GLFWErrorCallback.createPrint(System.err) - only nightly build.
-=======
-		// GLFWErrorCallback.createPrint(System.err)- only works for nightly build.
->>>>>>> fd210444c2a3015d1456b1ffaad933bee87e9a1b:src/me/mesh/sim/gfx/Display.java
 		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 		
 		// Try to initialize the GLFW library, if that fails no point continuing the program.
 		if (glfwInit() != GL_TRUE)
 			throw new IllegalStateException("Unable to initialise GLFW");
 		
-		// Window will stay hidden after creation.
+		// set Anti-Aliasing level to 4.
 		glfwWindowHint(GLFW_SAMPLES, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); 
-		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 		
-		window = glfwCreateWindow(WIDTH, HEIGHT, "Solar System Sim", NULL, NULL);
+		window = glfwCreateWindow(WIDTH, HEIGHT, "Test", NULL, NULL);
 		if (window == NULL)
 			throw new WindowSetUpException("Failed to set up window");
 		
@@ -105,18 +94,21 @@ public class Display // implements Runnable
 		glfwSetWindowPos(window, (vidmode.getWidth() - WIDTH) / 2, (vidmode.getHeight() - HEIGHT) / 2);
 		// make the window the current context for OpenGL rendering.
 		glfwMakeContextCurrent(window);
+		// Enable v-sync.
 		glfwSwapInterval(1);
 		glfwShowWindow(window);
+		
 	}
 	
 	private void loop()
 	{
-		GL.createCapabilities();
+		createCapabilities();
+		System.out.println(glGetString(GL_RENDERER));
+		System.out.println(glGetString(GL_VERSION));
+
 		initShaders();
-		// set the background color...to black.
-		// glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		ModelLoader loader = new ModelLoader();
-		RawModel model = loader.loadtoVAO(vertices);		
+		RawModel model = loader.loadtoVAO(vertices, indices);		
 		Renderer renderer = new Renderer();
 		
 		while (glfwWindowShouldClose(window) == GL_FALSE)
