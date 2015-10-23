@@ -22,6 +22,7 @@ public class Main
 
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
+<<<<<<< HEAD
 	
 	private ShaderUtil shaderUtil;
 	private long window;
@@ -41,11 +42,30 @@ public class Main
 
 	public void run()
 	{
+=======
+	// private RawModel model;
+	// private ModelLoader modelLoader = new ModelLoader();
+
+	private float[] vertices = {
+			+0.0f, +0.5f, 0.0f,
+			-0.5f, -0.5f, 0.0f,
+			+0.5f, -0.5f, 0.0f
+	};
+
+	private long window;
+
+	private ShaderUtil shaderUtil;
+
+	public void run()
+	{
+		System.out.println("Starting the shit with LWJGL " + Sys.getVersion());
+
+>>>>>>> c71005cd1621db8cda7fa82a4f280d47b95b9a71
 		try
 		{
 			init();
 			loop();
-			
+
 			// loop ended so destroy window.
 			glfwDestroyWindow(window);
 			keyCallback.release();
@@ -57,27 +77,39 @@ public class Main
 			errorCallback.release();
 		}
 	}
-	
+
 	public void init()
 	{
 		// Error callback- will print to standard error any GLFW errors that occur.
 		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
-		
+
 		// Try to initialize the GLFW library, if that fails no point continuing the program.
 		if (glfwInit() != GL_TRUE)
 			throw new IllegalStateException("Unable to initialise GLFW");
+<<<<<<< HEAD
 		
 		// set Anti-Aliasing level to 4.
+=======
+
+		// Window will stay hidden after creation.
+>>>>>>> c71005cd1621db8cda7fa82a4f280d47b95b9a71
 		glfwWindowHint(GLFW_SAMPLES, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+<<<<<<< HEAD
 		
 		window = glfwCreateWindow(WIDTH, HEIGHT, "Test", NULL, NULL);
+=======
+		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
+		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
+		window = glfwCreateWindow(WIDTH, HEIGHT, "Solar System Sim", NULL, NULL);
+>>>>>>> c71005cd1621db8cda7fa82a4f280d47b95b9a71
 		if (window == NULL)
 			throw new WindowSetUpException("Failed to set up window");
-		
+
 		glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback()
 		{
 			@Override
@@ -87,11 +119,11 @@ public class Main
 					glfwSetWindowShouldClose(window, GL_TRUE);
 			}
 		});
-		
-		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		
+
+		GLFWvideoMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
 		// center the window.
-		glfwSetWindowPos(window, (vidmode.getWidth() - WIDTH) / 2, (vidmode.getHeight() - HEIGHT) / 2);
+		glfwSetWindowPos(window, (videoMode.getWidth() - WIDTH) / 2, (videoMode.getHeight() - HEIGHT) / 2);
 		// make the window the current context for OpenGL rendering.
 		glfwMakeContextCurrent(window);
 		// Enable v-sync.
@@ -99,7 +131,7 @@ public class Main
 		glfwShowWindow(window);
 		
 	}
-	
+
 	private void loop()
 	{
 		createCapabilities();
@@ -108,9 +140,13 @@ public class Main
 
 		initShaders();
 		ModelLoader loader = new ModelLoader();
+<<<<<<< HEAD
 		RawModel model = loader.loadtoVAO(vertices, indices);		
+=======
+		RawModel model = loader.loadtoVAO(vertices);
+>>>>>>> c71005cd1621db8cda7fa82a4f280d47b95b9a71
 		Renderer renderer = new Renderer();
-		
+
 		while (glfwWindowShouldClose(window) == GL_FALSE)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -123,7 +159,7 @@ public class Main
 		shaderUtil.dispose();
 		loader.cleanUp();
 	}
-	
+
 	private void initShaders()
 	{
 		shaderUtil = new ShaderUtil();
@@ -131,7 +167,7 @@ public class Main
 		shaderUtil.attachFragmentShader("me/mesh/sim/gfx/triangle.fs");
 		shaderUtil.link();
 	}
-	
+
 	public static void main(String[] args)
 	{
 		new Main().run();
